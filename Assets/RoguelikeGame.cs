@@ -30,6 +30,8 @@ public class RoguelikeGame : MonoBehaviour {
 	List<string> inputtedAnswers = new List<string>();
 	private bool isDecline = false;
 
+	private string Swap1, Swap2;
+
 	public Texture[] _textures;
 
 	public Renderer rendererShop1;
@@ -104,12 +106,17 @@ public class RoguelikeGame : MonoBehaviour {
 				SwapItems(shopItem, invItem + 2);
 				GetInvItems();
 				int current = DetermineInvDps();
+				itemsUsed = new List<string>(itemsUsedOriginal);
+				invItems = new List<string>(invItemsOriginal);
 				if (current > currentHighest)
                 {
 					currentHighest = current;
+					Swap1 = itemsUsed[shopItem];
+					Swap2 = itemsUsed[invItem + 2];
+					 
+
                 }
-				itemsUsed = new List<string>(itemsUsedOriginal);
-				invItems = new List<string>(invItemsOriginal);
+
 			}
         }
 		if (currentHighest <= beginningDP)
@@ -281,7 +288,7 @@ public class RoguelikeGame : MonoBehaviour {
 						Module.HandleStrike();
 						Log("Your ending shop items were {0} and {1} and your ending inventory items were {2}, {3}, {4} and {5} after buying. Which didn't result in the highest DPS. Strike!",
 							itemsUsed[0], itemsUsed[1], itemsUsed[2], itemsUsed[3], itemsUsed[4], itemsUsed[5]);
-						Log("Your answer had a DPS of {0} while the highest possible DPS was {1}.", inputtedDps, correctDps);
+						Log("Your answer had a DPS of {0} while you could have got the DPS of {1} by swapping {2} and {3}.", inputtedDps, correctDps, Swap1, Swap2);
 						inputtedAnswers.Clear();
 						itemsUsed = new List<string>(itemsUsedOriginal);
 						invItems = new List<string>(invItemsOriginal);
