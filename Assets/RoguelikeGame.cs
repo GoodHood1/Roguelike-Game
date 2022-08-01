@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using KModkit;
+using System.Text.RegularExpressions;
 
 public class RoguelikeGame : MonoBehaviour {
 
@@ -43,6 +44,8 @@ public class RoguelikeGame : MonoBehaviour {
 
 	public Color[] textColors;
 
+	string[] ValidNames = {"dagger", "sword", "axe", "tablet", "flask", "guide", "tome", "cloak", "quiver", "bow"};
+	List<string> ItemsAvailableRenamed = new List<string>();
 
 	void Awake()
     {
@@ -68,9 +71,7 @@ public class RoguelikeGame : MonoBehaviour {
 				ButtonTexts[btntext].text = items[itemToUse];
 			}
 			itemsUsed.Add(items[itemToUse]);
-
-
-			
+			ItemsAvailableRenamed.Add(ValidNames[itemToUse]);
         }
 
 		rendererShop1.material.mainTexture = _textures.First(t => t.name == itemsUsed[0]);
@@ -124,11 +125,6 @@ public class RoguelikeGame : MonoBehaviour {
 			isDecline = true;
         }
 		return currentHighest;
-    }
-
-	void Update()
-    {
-	
     }
 
 	private int DetermineInvDps()
@@ -270,6 +266,7 @@ public class RoguelikeGame : MonoBehaviour {
 						return false;
 					}
 					SwapItems(itemsUsed.IndexOf(inputtedAnswers[0]), itemsUsed.IndexOf(inputtedAnswers[1]));
+					Log("You swapped {0} and {1}", inputtedAnswers[0], inputtedAnswers[1]);
 					GetInvItems();
 					int inputtedDps = DetermineInvDps();
 					if (inputtedDps == correctDps && !(invItems.Contains(inputtedAnswers[0]) && invItems.Contains(inputtedAnswers[1])))
@@ -286,9 +283,9 @@ public class RoguelikeGame : MonoBehaviour {
                     {
 						Audio.PlaySoundAtTransform("equip", Buttons[btn].transform);
 						Module.HandleStrike();
-						Log("Your ending shop items were {0} and {1} and your ending inventory items were {2}, {3}, {4} and {5} after buying. Which didn't result in the highest DPS. Strike!",
+						Log("Your ending shop items were {0} and {1} and your ending inventory items were {2}, {3}, {4} and {5} after buying. Which didn't result in the highest valid DPS possible. Strike!",
 							itemsUsed[0], itemsUsed[1], itemsUsed[2], itemsUsed[3], itemsUsed[4], itemsUsed[5]);
-						Log("Your answer had a DPS of {0} while you could have got the DPS of {1} by swapping {2} and {3}.", inputtedDps, correctDps, Swap1, Swap2);
+						Log("Your answer had a DPS of {0}{4} you could have got the {5}DPS of {1} by swapping {2} and {3}.", inputtedDps, correctDps, Swap1, Swap2, inputtedDps >= correctDps ? ", although that is invalid. While" : " while",  inputtedDps >= correctDps ? "correct " : "");
 						inputtedAnswers.Clear();
 						itemsUsed = new List<string>(itemsUsedOriginal);
 						invItems = new List<string>(invItemsOriginal);
@@ -333,5 +330,40 @@ public class RoguelikeGame : MonoBehaviour {
 	{
 		Debug.LogFormat("[Roguelike Game #{0}] {1}", _moduleID, string.Format(message, args));
 
+	}
+	
+	//twitch plays
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"To decline the trade, use !{0} decline | To swap any 2 items, use !{0} swap [Item 1] [Item 2] (Valid items are: axe, bow, cloak, sword, guide, flask, quiver, dagger, tablet, tome)";
+    #pragma warning restore 414
+	
+	IEnumerator ProcessTwitchCommand(string command)
+    {
+		string[] parameters = command.Split(' ');
+		if (Regex.IsMatch(command, @"^\s*decline\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+		{
+			yield return null;
+			Buttons[6].OnInteract();
+		}
+		
+		if (Regex.IsMatch(parameters[0], @"^\s*swap\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+		{
+			yield return null;
+			if (parameters.Length != 3)
+			{
+				yield return "sendtochaterror Parameter length invalid. Command ignored.";
+				yield break;
+			}
+			
+			if (!ValidNames.Contains(parameters[1].ToLower()) || !ValidNames.Contains(parameters[2].ToLower()))
+			{
+				yield return "sendtochaterror An item being swapped is invalid. Command ignored.";
+				yield break;
+			}
+			
+			Buttons[Array.IndexOf(itemsUsedOriginal.ToArray(), itemsUsedOriginal[Array.IndexOf(ItemsAvailableRenamed.ToArray(), parameters[1].ToLower())])].OnInteract();
+			yield return new WaitForSecondsRealtime(0.1f);
+			Buttons[Array.IndexOf(itemsUsedOriginal.ToArray(), itemsUsedOriginal[Array.IndexOf(ItemsAvailableRenamed.ToArray(), parameters[2].ToLower())])].OnInteract();
+		}
 	}
 }
