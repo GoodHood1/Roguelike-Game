@@ -26,6 +26,7 @@ public class RoguelikeGame : MonoBehaviour {
 	private List<string> invItems = new List<string>();
 	private List<string> invItemsOriginal = new List<string>();
 
+
 	private int beginningDP;
 	List<string> inputtedAnswers = new List<string>();
 	private bool isDecline = false;
@@ -54,6 +55,7 @@ public class RoguelikeGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
 		for (int btn = 0; btn < Buttons.Length; btn++)
 		{
 			Buttons[btn].OnInteract = ButtonPressed(btn);
@@ -165,7 +167,7 @@ public class RoguelikeGame : MonoBehaviour {
 				Bomb.GetSerialNumberLetters().Count(i => i == 'M') +
 				Bomb.GetSerialNumberLetters().Count(i => i == 'E')) * 5;
 
-			_ap += (Bomb.GetModuleNames().Count(i => i.ToLower().Contains("game")) * 5) - 1;
+			_ap += (Bomb.GetModuleNames().Count(i => i.ToLower().Contains("game"))*20 - 20);
 
         }
 		if (invItems.Contains("PFlask"))
@@ -237,6 +239,7 @@ public class RoguelikeGame : MonoBehaviour {
             }
 			if (btn == 6)
 			{
+				int correctDps = DetermineCorrectDps();
 				if (isDecline)
 				{
 					solved = true;
@@ -277,19 +280,27 @@ public class RoguelikeGame : MonoBehaviour {
 						solved = true;
 						Audio.PlaySoundAtTransform("correct", Buttons[btn].transform);
 						Module.HandlePass();
-						Log("Your ending shop items were {0} and {1} and your ending inventory items were {2}, {3}, {4} and {5} after buying. Module Solved!", 
+						Log("Your ending shop items were {0} and {1} and your ending inventory items were {2}, {3}, {4} and {5} after buying. Module Solved!",
 							itemsUsed[0], itemsUsed[1], itemsUsed[2], itemsUsed[3], itemsUsed[4], itemsUsed[5]);
 						itemsUsed = new List<string>(itemsUsedOriginal);
 						invItems = new List<string>(invItemsOriginal);
 					}
 					else
-                    {
+					{
 						Audio.PlaySoundAtTransform("equip", Buttons[btn].transform);
 						Module.HandleStrike();
-						Log("Your ending shop items were {0} and {1} and your ending inventory items were {2}, {3}, {4} and {5} after buying. Which didn't result in the highest DPS. Strike!",
-							itemsUsed[0], itemsUsed[1], itemsUsed[2], itemsUsed[3], itemsUsed[4], itemsUsed[5]);
-						Log("Your answer had a DPS of {0} while you could have got the DPS of {1} by swapping {2} and {3}.", inputtedDps, correctDps, Swap1, Swap2);
-						inputtedAnswers.Clear();
+						if (isDecline)
+						{
+							Log("You should have pressed decline because your starting DPS of {0} was equal to or greater than the highest swap which resulted in {1} DPS.",
+								beginningDP, correctDps);
+						}
+						else
+						{
+							Log("Your ending shop items were {0} and {1} and your ending inventory items were {2}, {3}, {4} and {5} after buying. Which didn't result in the highest DPS. Strike!",
+								itemsUsed[0], itemsUsed[1], itemsUsed[2], itemsUsed[3], itemsUsed[4], itemsUsed[5]);
+							Log("Your answer had a DPS of {0} while you could have got the DPS of {1} by swapping {2} and {3}.", inputtedDps, correctDps, Swap1, Swap2);
+							inputtedAnswers.Clear();
+						}
 						itemsUsed = new List<string>(itemsUsedOriginal);
 						invItems = new List<string>(invItemsOriginal);
 						for (int i = 0; i < ButtonTexts.Length; i++)
