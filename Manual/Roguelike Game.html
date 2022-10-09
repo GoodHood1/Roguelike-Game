@@ -1,14 +1,22 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Roguelike Game — Keep Talking and Nobody Explodes Module</title>
     <meta name="viewport" content="initial-scale=1">
+    <title>Roguelike Game — Keep Talking and Nobody Explodes Module</title>
+    <link rel="stylesheet" type="text/css" href="css/font.css">
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link rel="stylesheet" type="text/css" href="css/font.css">
     <script src="js/ktane-utils.js"></script>
+    <style>
+        .images td {
+            text-align: center;
+            padding: 1mm;
+        }
+        .dark table, table { border: none; }
+        td img { height: 38mm; }
+    </style>
 </head>
 <body>
     <div class="section">
@@ -18,32 +26,32 @@
                 <span class="page-header-section-title">Roguelike Game</span>
             </div>
             <div class="page-content">
-                <img src="img/Component/roguelike.svg" class="diagram">
+                <img src="img/Component/Roguelike Game.svg" class="diagram">
                 <h2>On the Subject of Roguelike Game</h2>
                 <p class="flavour-text">Is it rogue though?</p>
-                    
+
                 <p>On the module, there will be two large items displayed
                 on top and four smaller items on the bottom. There will also be
                 a decline button.</p>
 
-                <p>The smaller items are your inventory items, the larger items being 
+                <p>The smaller items are your inventory items, the larger items being
                     the items that a shopkeeper presents.
                 </p>
                 Selecting a small item and a large item will swap those two items.
                 <br>
                 <em><strong>Note: You will not visually see the items swap.</strong></em>
-                <p>To solve the module, swap an inventory item with a shop item 
-                    which will result in the highest possible inventory DPS. 
+                <p>To solve the module, swap an inventory item with a shop item
+                    which will result in the highest possible inventory DPS.
                     <br>
                     Selecting two items which do not result in the highest possible DPS
                     will cause a strike. None of the items will change upon a strike.
                 </p>
-                
+
                 <p>Selecting both items from either the shop or the inventory will incur a strike.</p>
 
                 <p>If no viable swap has a higher DPS than the starting inventory DPS, decline the trade.</p>
 
-                <p>To calculate DPS, start with 1 Attack Speed (AS) and 1 Attack Power (AP). Then, 
+                <p>To calculate DPS, start with 1 Attack Speed (AS) and 1 Attack Power (AP). Then,
                     use the items in your inventory with the item table to determine your DPS.
                     <br> <i>(DPS = AS * AP)</i>
                 </p>
@@ -58,12 +66,12 @@
                     <tr>
                         <td><b>Dagger</b></td>
                         <td style="width: 30%">+2 AS. <br>
-                            0 lit indicators: <br>
-                             +4 AP per ind
+                            If 0 lit indicators: <br>
+                            &nbsp;&nbsp;+4 AP per ind
                         </td>
                         <td><b>Strategy Guide</b></td>
                         <td>+5 AP per G, A, M or E in the serial number. <br>
-                        +20 AP per other "Game" module.</td>
+                        +20 AP per other module that has "Game" in its name.***</td>
                     </tr>
                     <tr>
                         <td><b>Great-Sword</b></td>
@@ -74,15 +82,12 @@
                     </tr>
                     <tr>
                         <td><b>Axe</b></td>
-                        <td>+10 AP. AS = # of unique letters in indicators*.</td>   
+                        <td>+10 AP. AS = # of unique letters in indicators*.</td>
                         <td><b>Cloak</b></td>
                         <td>AP +1 per full minute left on the timer**.</td>
                     </tr>
-                    
+
                 </table>
-
-
-
             </div>
             <div class="page-footer relative-footer">Page 1 of 1</div>
         </div>
@@ -112,56 +117,56 @@
                         <td>AS +1 per module modulo 7.</td>
                     </tr>
                 </table>
-                
+
                 <p style="font-style:italic">
                     * = means that this value cannot be changed.
                     <br>
                     **Calculated when submitted.
+					<br>
+					***Capitalisation doesnt matter. Includes other Roguelike Games
 
                 </p>
                 <br/>
                 <h2>Appendix IT3MS</h2>
-                <table width="100%">
+                <table class="images">
                     <tr>
-                        <th><b>Item</b></th>
-                        <th><b>Image<b/></th>
-                        <th><b>Item</b></th>
-                        <th><b>Image</b></th>
-                    </tr>
-                    <tr>
-                        <td>Axe</td>
-                        <td><img src="img\RoguelikeImgs/Axe.jpg" width="100px"/></td>
-                        <td>Bow</td>
-                        <td><img src="img\RoguelikeImgs/Bow.jpg" width="100px"/></td>
-                    </tr>
-                    <tr>
-                        <td>Cloak</td>
-                        <td><img src="img\RoguelikeImgs/Cloak.jpg" width="100px" /></td>
+                        <th>Axe</th>
+                        <th>Bow</th>
+                        <th>Cloak</th>
                         <td>Dagger</td>
-                        <td><img src="img\RoguelikeImgs/Dagger.jpg" width="100px" /></td>
+                    </tr>
+                    <tr>
+                        <td><img src="img/Roguelike Game/Axe.png"></td>
+                        <td><img src="img/Roguelike Game/Bow.png"></td>
+                        <td><img src="img/Roguelike Game/Cloak.png"></td>
+                        <td><img src="img/Roguelike Game/Dagger.png"></td>
                     </tr>
                     <tr>
                         <td>Great Sword</td>
-                        <td><img src="img\RoguelikeImgs/GSword.jpg" width="100px" /></td>
                         <td>Strategy Guide</td>
-                        <td><img src="img\RoguelikeImgs/Guide.jpg" width="100px" /></td>
+                        <td>Poison Flask</td>
+                        <td>Quiver</td>
                     </tr>
                     <tr>
-                        <td>Poison Flask</td>
-                        <td><img src="img\RoguelikeImgs/PFlask.jpg" width="100px" /></td>
-                        <td>Quiver</td>
-                        <td><img src="img\RoguelikeImgs/Quiver.jpg" width="100px" /></td>
+                        <td><img src="img/Roguelike Game/GSword.png"></td>
+                        <td><img src="img/Roguelike Game/Guide.png"></td>
+                        <td><img src="img/Roguelike Game/PFlask.png"></td>
+                        <td><img src="img/Roguelike Game/Quiver.png"></td>
                     </tr>
                     <tr>
                         <td>Tablet</td>
-                        <td><img src="img\RoguelikeImgs/Tablet.jpg" width="100px" /></td>
                         <td>Tome</td>
-                        <td><img src="img\RoguelikeImgs/Tome.jpg" width="100px" /></td>
+                    </tr>
+                    <tr>
+                        <td><img src="img/Roguelike Game/Tablet.png"></td>
+                        <td><img src="img/Roguelike Game/Tome.png"></td>
+                        <td colspan="2" class="corner"></td>
                     </tr>
                 </table>
 
             </div>
             <div class="page-footer relative-footer">Page 2 of 2</div>
+        </div>
     </div>
 </body>
 </html>
