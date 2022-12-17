@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using KModkit;
+using System.Text.RegularExpressions;
 
 public class RoguelikeGame : MonoBehaviour {
 
@@ -44,6 +45,9 @@ public class RoguelikeGame : MonoBehaviour {
 
 	public Color[] textColors;
 
+	string[] ValidNames = { "dagger", "sword", "axe", "tablet", "flask", "guide", "tome", "cloak", "quiver", "bow" };
+	List<string> ItemsAvailableRenamed = new List<string>();
+
 
 	void Awake()
     {
@@ -70,10 +74,11 @@ public class RoguelikeGame : MonoBehaviour {
 				ButtonTexts[btntext].text = items[itemToUse];
 			}
 			itemsUsed.Add(items[itemToUse]);
+			ItemsAvailableRenamed.Add(ValidNames[itemToUse]);
 
 
-			
-        }
+
+		}
 
 		rendererShop1.material.mainTexture = _textures.First(t => t.name == itemsUsed[0]);
 		rendererShop2.material.mainTexture = _textures.First(t => t.name == itemsUsed[1]);
@@ -344,5 +349,40 @@ public class RoguelikeGame : MonoBehaviour {
 	{
 		Debug.LogFormat("[Roguelike Game #{0}] {1}", _moduleID, string.Format(message, args));
 
+	}
+
+	//twitch plays
+#pragma warning disable 414
+	private readonly string TwitchHelpMessage = @"To decline the trade, use !{0} decline | To swap any 2 items, use !{0} swap [Item 1] [Item 2] (Valid items are: axe, bow, cloak, sword, guide, flask, quiver, dagger, tablet, tome)";
+#pragma warning restore 414
+
+	IEnumerator ProcessTwitchCommand(string command)
+	{
+		string[] parameters = command.Split(' ');
+		if (Regex.IsMatch(command, @"^\s*decline\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+		{
+			yield return null;
+			Buttons[6].OnInteract();
+		}
+
+		if (Regex.IsMatch(parameters[0], @"^\s*swap\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+		{
+			yield return null;
+			if (parameters.Length != 3)
+			{
+				yield return "sendtochaterror Parameter length invalid. Command ignored.";
+				yield break;
+			}
+
+			if (!ValidNames.Contains(parameters[1].ToLower()) || !ValidNames.Contains(parameters[2].ToLower()))
+			{
+				yield return "sendtochaterror An item being swapped is invalid. Command ignored.";
+				yield break;
+			}
+
+			Buttons[Array.IndexOf(itemsUsedOriginal.ToArray(), itemsUsedOriginal[Array.IndexOf(ItemsAvailableRenamed.ToArray(), parameters[1].ToLower())])].OnInteract();
+			yield return new WaitForSecondsRealtime(0.1f);
+			Buttons[Array.IndexOf(itemsUsedOriginal.ToArray(), itemsUsedOriginal[Array.IndexOf(ItemsAvailableRenamed.ToArray(), parameters[2].ToLower())])].OnInteract();
+		}
 	}
 }
