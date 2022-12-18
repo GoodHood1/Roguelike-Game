@@ -22,6 +22,6 @@ MonoBehaviour:
     Idea by Seefop.
 
 '
-  version: 1.0
+  version: 1.4
   outputFolder: build
   previewImage: {fileID: 2800000, guid: cac446f29ab58ad478c61d1326bb1897, type: 3}
