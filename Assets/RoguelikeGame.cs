@@ -199,7 +199,7 @@ public class RoguelikeGame : MonoBehaviour {
         }
 		if (invItems.Contains("Bow"))
         {
-			_as += Bomb.GetModuleNames().Count();
+			_as += Bomb.GetModuleNames().Count() % 7;
         }
 
 		if (invItems.Contains("Axe"))
