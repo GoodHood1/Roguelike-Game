@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using KModkit;
 using System.Text.RegularExpressions;
+using KModkit;
+using UnityEngine;
 
 public class RoguelikeGame : MonoBehaviour {
 
@@ -199,7 +199,7 @@ public class RoguelikeGame : MonoBehaviour {
         }
 		if (invItems.Contains("Bow"))
         {
-			_as += Bomb.GetModuleNames().Count();
+			_as += Bomb.GetModuleNames().Count() % 7;
         }
 
 		if (invItems.Contains("Axe"))
@@ -358,28 +358,31 @@ public class RoguelikeGame : MonoBehaviour {
 
 	IEnumerator ProcessTwitchCommand(string command)
 	{
-		string[] parameters = command.Split(' ');
 		if (Regex.IsMatch(command, @"^\s*decline\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
 		{
 			yield return null;
 			Buttons[6].OnInteract();
-		}
+            yield break;
+        }
+
+        string[] parameters = command.Split(' ');
+
+        if (parameters.Length != 3) {
+            yield return "sendtochaterror Parameter length invalid. Command ignored.";
+        }
 
 		if (Regex.IsMatch(parameters[0], @"^\s*swap\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
 		{
-			yield return null;
-			if (parameters.Length != 3)
-			{
-				yield return "sendtochaterror Parameter length invalid. Command ignored.";
-				yield break;
-			}
-
 			if (!ValidNames.Contains(parameters[1].ToLower()) || !ValidNames.Contains(parameters[2].ToLower()))
 			{
 				yield return "sendtochaterror An item being swapped is invalid. Command ignored.";
-				yield break;
 			}
 
+            if (!ItemsAvailableRenamed.Contains(parameters[1].ToLower()) || !ItemsAvailableRenamed.Contains(parameters[2].ToLower())) {
+                yield return "sendtochaterror One or both of those items are not on the module! Command ignored.";
+            }
+
+            yield return null;
 			Buttons[Array.IndexOf(itemsUsedOriginal.ToArray(), itemsUsedOriginal[Array.IndexOf(ItemsAvailableRenamed.ToArray(), parameters[1].ToLower())])].OnInteract();
 			yield return new WaitForSecondsRealtime(0.1f);
 			Buttons[Array.IndexOf(itemsUsedOriginal.ToArray(), itemsUsedOriginal[Array.IndexOf(ItemsAvailableRenamed.ToArray(), parameters[2].ToLower())])].OnInteract();
